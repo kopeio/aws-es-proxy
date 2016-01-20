@@ -114,6 +114,13 @@ func (p *SigningRoundTripper) RoundTrip(req *http.Request) (*http.Response, erro
 	}
 
 	response, err := p.inner.RoundTrip(req)
-	glog.V(2).Infof("response %s", response.Status)
-	return response, err
+
+	if err != nil {
+		glog.Warning("Request error: ", err)
+
+		return nil, err
+	} else {
+		glog.V(2).Infof("response %s", response.Status)
+		return response, err
+	}
 }
