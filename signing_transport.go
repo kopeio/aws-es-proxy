@@ -67,9 +67,9 @@ func (p *SigningRoundTripper) RoundTrip(req *http.Request) (*http.Response, erro
 	delete(req.Header, "Authorization")
 
 	var body []byte
+	var err error
 
 	if req.Body != nil {
-		var err error
 		body, err = ioutil.ReadAll(req.Body)
 		if err != nil {
 			glog.Infof("error reading request body: %v", err)
@@ -79,10 +79,9 @@ func (p *SigningRoundTripper) RoundTrip(req *http.Request) (*http.Response, erro
 
 	oldPath := req.URL.Path
 	if oldPath != "" {
-		// Workaround for odd AWS escaping rules (?)
-		req.URL.Path = strings.Replace(req.URL.Path, "[", "%5B", -1)
-		req.URL.Path = strings.Replace(req.URL.Path, "]", "%5D", -1)
-		req.URL.Path = strings.Replace(req.URL.Path, "*", "%2A", -1)
+		// Escape the path before signing so that the path in the signature and
+		// the path in the request match.
+		req.URL.Path = req.URL.EscapedPath()
 		glog.V(4).Infof("Path -> %q", req.URL.Path)
 	}
 
