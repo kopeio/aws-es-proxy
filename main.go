@@ -66,6 +66,7 @@ func main() {
 		WriteTimeout:   120 * time.Second,
 		MaxHeaderBytes: 1 << 20,
 	}
+	glog.Infof("Listening on %s", listenHostAddr)
 	err = s.ListenAndServe()
 	glog.Fatalf("error listening on %q for http requests: %v", listenHostAddr, err)
 }
