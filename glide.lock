@@ -1,0 +1,27 @@
+hash: 34b66567d16cc3e3190db66148c6610b1d85fe089b242e7ba303249d5777d95b
+updated: 2016-05-17T11:16:33.480146521-04:00
+imports:
+- name: github.com/aws/aws-sdk-go
+  version: 7bad22e9cff8295edef29844b4daa55ecfb057b9
+  subpackages:
+  - aws
+  - aws/credentials
+  - aws/defaults
+  - aws/request
+  - private/signer/v4
+  - aws/awserr
+  - aws/corehandlers
+  - aws/credentials/ec2rolecreds
+  - aws/ec2metadata
+  - private/endpoints
+  - aws/awsutil
+  - aws/client/metadata
+  - private/protocol/rest
+  - aws/client
+- name: github.com/go-ini/ini
+  version: 12f418cc7edc5a618a51407b7ac1f1f512139df3
+- name: github.com/golang/glog
+  version: 23def4e6c14b4da8ac2ed8007337bc5eb5007998
+- name: github.com/jmespath/go-jmespath
+  version: 0b12d6b521d83fc7f755e7cfc1b1fbdd35a01a74
+devImports: []

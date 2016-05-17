@@ -1,0 +1,10 @@
+package: github.com/kopeio/aws-es-proxy
+import:
+- package: github.com/aws/aws-sdk-go
+  subpackages:
+  - aws
+  - aws/credentials
+  - aws/defaults
+  - aws/request
+  - private/signer/v4
+- package: github.com/golang/glog
