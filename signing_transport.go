@@ -77,6 +77,10 @@ func (p *SigningRoundTripper) RoundTrip(req *http.Request) (*http.Response, erro
 		}
 	}
 
+	if req.Method == "GET" || req.Method == "HEAD" {
+		delete(req.Header, "Content-Length")
+	}
+
 	oldPath := req.URL.Path
 	if oldPath != "" {
 		// Escape the path before signing so that the path in the signature and
