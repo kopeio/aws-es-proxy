@@ -1,6 +1,9 @@
-FROM debian:jessie
+FROM alpine:3.4
 
-RUN apt-get update && apt-get install --yes ca-certificates
+RUN apk --update upgrade && \
+    apk add curl ca-certificates && \
+    update-ca-certificates && \
+    rm -rf /var/cache/apk/*
 
 COPY /.build/artifacts/aws-es-proxy /usr/bin/aws-es-proxy
 
