@@ -1,3 +1,5 @@
+HUB_USER ?= kope
+
 all: image
 
 code:
@@ -11,7 +13,7 @@ build-in-docker: builder-image
 	docker run -it -v `pwd`:/src builder /onbuild.sh
 
 image: build-in-docker
-	docker build -t kope/aws-es-proxy  -f images/aws-es-proxy/Dockerfile .
+	docker build -t $(HUB_USER)/aws-es-proxy  -f images/aws-es-proxy/Dockerfile .
 
 push: image
-	docker push kope/aws-es-proxy:latest
+	docker push $(HUB_USER)/aws-es-proxy:latest

@@ -20,45 +20,38 @@ type SigningRoundTripper struct {
 	region      string
 	inner       http.RoundTripper
 	credentials *credentials.Credentials
+	hosts       map[string]string
 }
 
 var _ http.RoundTripper = &SigningRoundTripper{}
 
-func NewSigningRoundTripper(inner http.RoundTripper, region string, credentials *credentials.Credentials) *SigningRoundTripper {
+func NewSigningRoundTripper(inner http.RoundTripper, region string, credentials *credentials.Credentials, hosts map[string]string) *SigningRoundTripper {
 	if inner == nil {
 		inner = http.DefaultTransport
 	}
-	p := &SigningRoundTripper{inner: inner, region: region, credentials: credentials}
+	p := &SigningRoundTripper{inner: inner, region: region, credentials: credentials, hosts: hosts}
 	return p
 }
 
 func (p *SigningRoundTripper) RoundTrip(req *http.Request) (*http.Response, error) {
 	glog.V(2).Infof("Got request: %s %s", req.Method, req.URL)
 
-	// Fix the host header in case broken by proxy-rewrite
-	if req.URL.Host != "" {
-		req.Host = req.URL.Host
+	if len(p.hosts) > 0 {
+		host := p.hosts[req.Host]
+		req.Host = host
+	} else {
+		// Fix the host header in case broken by proxy-rewrite
+		if req.URL.Host != "" {
+			req.Host = req.URL.Host
+		}
 	}
 
 	// I think the AWS authentication proxy does not like forwarded headers
 	for k := range req.Header {
 		lk := strings.ToLower(k)
-		if lk == "x-forwarded-host" {
-			delete(req.Header, k)
-		}
-		if lk == "x-forwarded-for" {
-			delete(req.Header, k)
-		}
-		if lk == "x-forwarded-proto" {
-			delete(req.Header, k)
-		}
-		if lk == "x-forward-for" {
-			delete(req.Header, k)
-		}
-		if lk == "x-forward-proto" {
-			delete(req.Header, k)
-		}
-		if lk == "x-forward-port" {
+		switch lk {
+		case "x-forwarded-host", "x-forwarded-for", "x-forwarded-proto",
+			"x-forward-for", "x-forward-proto", "x-forward-port":
 			delete(req.Header, k)
 		}
 	}
