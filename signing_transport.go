@@ -77,7 +77,7 @@ func (p *SigningRoundTripper) RoundTrip(req *http.Request) (*http.Response, erro
 		}
 	}
 
-	if req.Method == "GET" || req.Method == "HEAD" {
+	if req.Method == "GET" || req.Method == "HEAD" || req.Method == "DELETE" {
 		delete(req.Header, "Content-Length")
 	}
 
